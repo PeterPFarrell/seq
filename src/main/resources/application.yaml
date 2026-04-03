@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: seq
+  mongodb:
+    uri: ${MONGO_DB_URI}
+    representation:
+      uuid: standard

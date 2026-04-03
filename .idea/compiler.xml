@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="24">
+      <module name="seq.src.main.controllers.main" target="25" />
+      <module name="seq.src.main.controllers.test" target="25" />
+      <module name="seq.src.main.utils.main" target="25" />
+      <module name="seq.src.main.utils.test" target="25" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+  </component>
+</project>
