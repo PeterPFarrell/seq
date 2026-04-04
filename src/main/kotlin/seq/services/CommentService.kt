@@ -5,13 +5,15 @@ import seq.Constants
 import seq.enitities.Comment
 import seq.enitities.CommentBoard
 import seq.repositories.CommentBoardRepository
+import seq.repositories.CommentRepository
 import java.util.UUID
 
 var mockCommentBoardList = mutableListOf<CommentBoard>()
 
 @Service
 class CommentService(
-    private val commentBoardRepository: CommentBoardRepository
+    private val commentBoardRepository: CommentBoardRepository,
+    private val commentRepository: CommentRepository,
 ) {
     fun newCommentBoard(boardName: String)
     {
@@ -20,15 +22,11 @@ class CommentService(
         commentBoardRepository.save(board)
     }
 
-    fun addComment(comment: Comment, commentBoardId: UUID)
+    fun addComment(comment: Comment)
     {
         if (comment.body.length > 512) throw Exception(Constants.COMMENT_TOO_LONG)
         if (comment.body.isNullOrBlank()) throw Exception(Constants.COMMENT_IS_EMPTY)
-
-        val commentBoard = getCommentBoardByID(commentBoardId)
-
-        commentBoard.children.add(comment)
-        commentBoardRepository.save(commentBoard)
+        commentRepository.save(comment)
     }
 
     fun getCommentBoardByID(commentBoardId: UUID): CommentBoard {
@@ -36,12 +34,18 @@ class CommentService(
             .orElseThrow { Exception("CommentBoard not found") }
     }
 
-    fun voteOnComment(commentBoardId: UUID, commentId: UUID, isUpvote: Boolean) {
-        val commentBoard = getCommentBoardByID(commentBoardId)
-        if (isUpvote) commentBoard.children.find { it.id == commentId }?.let { it.votes.upvotes++ }
-        else commentBoard.children.find { it.id == commentId }?.let { it.votes.downvotes++ }
+    fun getCommentsByID(commentBoardId: UUID): List<Comment> {
+        return commentRepository.findAllByParentId(commentBoardId)
+    }
 
-        commentBoardRepository.save(commentBoard)
+    fun voteOnComment(commentId: UUID, isUpvote: Boolean) {
+        val comment : Comment = commentRepository.findById(commentId)
+            .orElseThrow { Exception(Constants.COMMENT_DOES_NOT_EXIST) }
+
+        if (isUpvote) comment.votes.upvotes++
+        else comment.votes.downvotes++
+
+        commentRepository.save(comment)
     }
 }
 

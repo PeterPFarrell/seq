@@ -8,6 +8,5 @@ import java.util.UUID
 data class CommentBoard(
     @Id val id: UUID = UUID.randomUUID(),
     val name: String,
-    val children: MutableList<Comment> = mutableListOf(),
     val votes: Votes = Votes()
 )

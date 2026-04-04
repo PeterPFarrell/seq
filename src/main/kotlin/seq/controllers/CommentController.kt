@@ -17,27 +17,32 @@ import seq.services.CommentService
 import java.util.UUID
 
 @RestController
-@RequestMapping("v1/commentBoard")
+@RequestMapping("v1/comment")
 class CommentController(
     private val commentService: CommentService
 ) {
-    @PostMapping("/new/{name}")
+    @PostMapping("board/{name}")
     fun newCommentBoard(@PathVariable("name") name: String) {
         commentService.newCommentBoard(name)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("board/{id}")
     fun getCommentBoard(@PathVariable("id") id: UUID) : ResponseEntity<CommentBoard> {
         return ResponseEntity.status(HttpStatus.FOUND).body(commentService.getCommentBoardByID(id))
     }
 
-    @PostMapping("/comment/post/{id}")
-    fun postComment(@RequestBody comment: Comment, @PathVariable("id") id: UUID) {
-        commentService.addComment(comment, id)
+    @GetMapping("/{id}")
+    fun getComments(@PathVariable("id") id: UUID) : ResponseEntity<List<Comment>> {
+        return ResponseEntity.status(HttpStatus.FOUND).body(commentService.getCommentsByID(id))
     }
 
-    @PatchMapping("/vote/{board_id}/{comment_id}/{isUpvote}")
-    fun voteOnComment(@PathVariable("isUpvote") isUpvote: Boolean, @PathVariable("board_id") board_id: UUID, @PathVariable("comment_id") comment_id: UUID) {
-        commentService.voteOnComment(board_id, comment_id, isUpvote)
+    @PostMapping()
+    fun postComment(@RequestBody comment: Comment) {
+        commentService.addComment(comment)
+    }
+
+    @PatchMapping("/vote/{comment_id}/{isUpvote}")
+    fun voteOnComment(@PathVariable("isUpvote") isUpvote: Boolean, @PathVariable("comment_id") comment_id: UUID) {
+        commentService.voteOnComment(comment_id, isUpvote)
     }
 }
