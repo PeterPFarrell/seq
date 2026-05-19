@@ -4,13 +4,13 @@ import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-const val CONTAINER_CMD = "docker compose ps"
+const val CONTAINER_CMD = listOf("docker","compose","ps")
 
 @Service
 class StatusService {
 
     fun getContainerInfo() : String {
-        return runCommand(listOf(CONTAINER_CMD))
+        return runCommand(CONTAINER_CMD)
     }
 
 
