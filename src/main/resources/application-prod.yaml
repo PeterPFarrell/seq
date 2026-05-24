@@ -8,4 +8,5 @@ spring:
 app:
   cors:
     allowed:
-      - http://localhost:5173
+      - https://*.sequesterapp.com
+      - https://sequesterapp.com
